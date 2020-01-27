@@ -6,6 +6,9 @@ echo "Welcome Gambling Simulation Problem"
 STAKE_OF_PER_DAY=100
 PER_BET=1
 
+#Declaring a dictionary
+declare -A betRecord
+
 #Calculate 50% of stake
 percent=$((STAKE_OF_PER_DAY * 50 / 100))
 
@@ -35,14 +38,18 @@ function MonthlyGambling()
 {
 	for((i=1;i<=20;i++))
 	do
-			totalAmount=$((totalAmount + $(DailyLimit))) 
+			#store the every day record in a dictionary
+			betRecord[Day$i]=$(DailyLimit)
+
+			totalAmount=$((totalAmount + ${betRecord[Day$i]})) 
+			echo "Day$i  ${betRecord[Day$i]}"
 	done
 
 	if [[ $totalAmount -gt 0 ]]
 	then
-			echo "Total amount of won: $totalAmount"
+			echo "Total amount of won in 20 days: $totalAmount"
 	else
-			echo "Total amount of loose: $totalAmount"
+			echo "Total amount of loose in 20 days: $totalAmount"
 	fi
 }
 
