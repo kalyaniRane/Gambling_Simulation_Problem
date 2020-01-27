@@ -13,7 +13,7 @@ max_cash=$((STAKE_OF_PER_DAY + percent))
 min_cash=$((STAKE_OF_PER_DAY - percent))
 cash=$STAKE_OF_PER_DAY
 
-#Check Gambler is Win or Loose
+#Function to check daily betting
 function DailyLimit()
 {
 	while [ $cash -gt $min_cash ] && [ $cash -lt $max_cash ]
@@ -21,13 +21,29 @@ function DailyLimit()
 		if [[ $((RANDOM%2)) -eq 1 ]]
 		then
 				((cash++))
-				echo "Win...$cash"
 		else
 				((cash--))
-				echo "Loose...$cash"
 		fi
 	done
+
+	gainAmount=$((cash - STAKE_OF_PER_DAY))
+	echo $gainAmount
 }
 
-DailyLimit
- echo "Total cash of the day: $cash"
+#Calculate the total profit or loss within a month
+function MonthlyGambling()
+{
+	for((i=1;i<=20;i++))
+	do
+			totalAmount=$((totalAmount + $(DailyLimit))) 
+	done
+
+	if [[ $totalAmount -gt 0 ]]
+	then
+			echo "Total amount of won: $totalAmount"
+	else
+			echo "Total amount of loose: $totalAmount"
+	fi
+}
+
+MonthlyGambling
