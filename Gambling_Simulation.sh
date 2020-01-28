@@ -7,13 +7,14 @@ STAKE_OF_PER_DAY=100
 PER_BET=1
 
 #Declaring a dictionary
-declare -A betRecord
+declare -A sumOfBets
 
 #Calculate 50% of stake
 percent=$((STAKE_OF_PER_DAY * 50 / 100))
 
 max_cash=$((STAKE_OF_PER_DAY + percent))
 min_cash=$((STAKE_OF_PER_DAY - percent))
+
 cash=$STAKE_OF_PER_DAY
 
 #Function to check daily betting
@@ -33,24 +34,29 @@ function DailyLimit()
 	echo $gainAmount
 }
 
-#Calculate the total profit or loss within a month
+#Calculate the daily cash nd stored it into the dictionary
 function MonthlyGambling()
 {
 	for((i=1;i<=20;i++))
 	do
 			#store the every day record in a dictionary
-			betRecord[Day$i]=$(DailyLimit)
+			sumOfBets[Day$i]=$((${sumOfBets[Day$((i-1))]} + $(DailyLimit)))
 
-			totalAmount=$((totalAmount + ${betRecord[Day$i]})) 
-			echo "Day$i  ${betRecord[Day$i]}"
 	done
 
-	if [[ $totalAmount -gt 0 ]]
-	then
-			echo "Total amount of won in 20 days: $totalAmount"
-	else
-			echo "Total amount of loose in 20 days: $totalAmount"
-	fi
+		#call the checkday function for sort all element of dictionary 
+		echo "Luckiest Day : $( checkDay | sort -rn -k2 | head -n1)"
+		echo "Unluckiest Day : $( checkDay | sort -n -k2 | head -n1)"
 }
 
+#Function to get all record of dictionary
+function checkDay()
+{
+	for i in ${!sumOfBets[@]}
+	do
+			echo "$i ${sumOfBets[$i]}"
+	done
+}
+
+#Function calling MonthlyGambling to calculate daily cash
 MonthlyGambling
