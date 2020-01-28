@@ -1,5 +1,4 @@
 #!/bin/bash
-
 echo "Welcome Gambling Simulation Problem"
 
 #Declaring and Initializing Constants
@@ -58,5 +57,21 @@ function checkDay()
 	done
 }
 
+#Function to check gambler can play for next month or not
+function playingNextMonth()
+{
+	while [ ${sumOfBets[Day20]} -gt 0 ]
+	do
+		echo -e "Your balance is : ${sumOfBets[Day20]} \nYou Can Play Again"
+		echo "-------Next Month------"
+		MonthlyGambling
+	done
+	echo "Your balance is : ${sumOfBets[Day20]}"
+	echo "Sorry You Don't Have Enough Balance To Play Again"
+}
+
 #Function calling MonthlyGambling to calculate daily cash
 MonthlyGambling
+
+#Function calling to check gambler can play for next month or not
+playingNextMonth
